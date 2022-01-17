@@ -63,6 +63,7 @@ local cvar_icon = CreateClientConVar("killcam_hud_icon", "mw2/abrams", true, tru
 local cvar_lvl_icon = CreateClientConVar("killcam_hud_lvl_icon", "001_rank_pvt1", true, true, "Playercard's level icon filename.")
 
 local cvar_text = CreateClientConVar("killcam_hud_text", "Custom Text", true, true, "A playercard's title text")
+local cvar_clantag = CreateClientConVar("killcam_hud_clantag", "ClanTag", true, true, "A playercard's clantag text")
 local cvar_lvl = CreateClientConVar("killcam_hud_lvl", "1", true, true, "A player's level.", 1, Killcam.CFG.MaxLevel or 10000)
 
 --// Preview Materials
@@ -117,6 +118,9 @@ end
 local function getTitleText()
     return GetGlobalString("Killcam_Killer_TitleText", "aboba")
 end
+local function getClanTag()
+    return GetGlobalString("Killcam_Killer_ClanTag", "aboba")
+end
 local function getLvl()
     return GetGlobalString("Killcam_Killer_Lvl", "0")
 end
@@ -128,7 +132,7 @@ local function getTime()
     return string.format("0:%04.1f", time)
 end
 
-local function DrawPlayerCard(x, y, w, mat_title, mat_icon, mat_lvl, str_title, str_nick, str_lvl)
+local function DrawPlayerCard(x, y, w, mat_title, mat_icon, mat_lvl, str_title, str_clantag, str_nick, str_lvl)
     local top_h, bot_h = w * 0.23, w * 0.096
 
     surface.SetDrawColor(color_white)
@@ -145,14 +149,17 @@ local function DrawPlayerCard(x, y, w, mat_title, mat_icon, mat_lvl, str_title, 
     surface.SetMaterial(mat_title)
     surface.DrawTexturedRect(x, y - w * 0.76 * 0.02, w * 0.76, w * 0.76 * 0.2)
 
---// Title text -- LIMIT: 13 chars
+--// Title text
     draw.SimpleTextOutlined(str_title, "Killcam_Title", x + w * 0.76 * 0.5, y - w * 0.76 * 0.02 + w * 0.76 * 0.2 * 0.5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 3, Color(0,0,0))
+
+--// Clantag text
+    draw.SimpleTextOutlined(str_clantag, "Killcam_Title", x + w * 0.02, y + top_h +  bot_h * 0.5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 3, Color(0,0,0))
     
 --// Icon
     surface.SetMaterial(mat_icon)
     surface.DrawTexturedRect(x + w - top_h, y, top_h, top_h)
     
---// Name LIMIT: 13 shars
+--// Name
     draw.SimpleTextOutlined(str_nick, "Killcam_Name", x + w * 0.025, y + w * 0.22, Color(160,255,190), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM, 3, Color(0, 0, 0))
     
 --// Level LIMIT: config or 10000 
@@ -201,9 +208,9 @@ hook.Add("HUDPaint", "aaaKillcamHUD", function()
                 mat_lvl = Mat("killcam/ranks/", lvl_lv)
             end
 
-            DrawPlayerCard((ScrW() - UI_SCALE_KCHUD) * 0.5, ScrH() * 0.835, UI_SCALE_KCHUD, mat_title, mat_icon, mat_lvl, getTitleText(), getNick(), getLvl())
+            DrawPlayerCard((ScrW() - UI_SCALE_KCHUD) * 0.5, ScrH() * 0.835, UI_SCALE_KCHUD, mat_title, mat_icon, mat_lvl, getTitleText(), getClanTag(), getNick(), getLvl())
         else
-            DrawPlayerCard((ScrW() - UI_SCALE_KCHUD) * 0.5, ScrH() * 0.835, UI_SCALE_KCHUD, mat_title_preview, mat_icon_preview, mat_lvl_preview, cvar_text:GetString(), LocalPlayer():Nick(), cvar_lvl:GetString())
+            DrawPlayerCard((ScrW() - UI_SCALE_KCHUD) * 0.5, ScrH() * 0.835, UI_SCALE_KCHUD, mat_title_preview, mat_icon_preview, mat_lvl_preview, cvar_text:GetString(), cvar_clantag:GetString(), LocalPlayer():Nick(), cvar_lvl:GetString())
         end
 
         surface.SetDrawColor(color_white)

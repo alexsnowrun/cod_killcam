@@ -184,6 +184,29 @@ local function OpenMenu()
         end
     end
 
+--// ClanTag label
+    local ctel = ep:Add("DLabel")
+    ctel:Dock(TOP)
+    ctel:SetFont("xpgui_small")
+    ctel:SetText(Killcam.LANG.menu_entry_clantag_label or "ClanTag:")
+    ctel:SetTextColor(color_white)
+    ctel:SizeToContents()
+
+--// ClanTag text
+    local cte = ep:Add("XPTextEntry")
+    cte:Dock(TOP)
+    cte:SetConVar("killcam_hud_clantag")
+
+    function cte:AllowInput()
+        return utf8.len(self:GetValue()) > 19
+    end
+
+    function cte:OnValueChange(str)
+        if utf8.len(str) > 20 then
+            self:SetValue(utf8.sub(str, 1, 20))
+        end
+    end
+
 --// Level label
     local ltel = ep:Add("DLabel")
     ltel:Dock(TOP)

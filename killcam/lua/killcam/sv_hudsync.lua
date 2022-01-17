@@ -5,6 +5,7 @@ hook.Add("OnKillcamReplayStart", "Killcam - Sync killer info", function(pl)
     
     
     SetGlobalString("Killcam_Killer_TitleText", pl:GetInfo("killcam_hud_text"))
+    SetGlobalString("Killcam_Killer_ClanTag", pl:GetInfo("killcam_hud_clantag"))
     SetGlobalString("Killcam_Killer_Lvl", pl:GetInfo("killcam_hud_lvl"))
     SetGlobalString("Killcam_Killer_Nick", pl:Nick())
 end)
